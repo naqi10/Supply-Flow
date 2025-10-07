@@ -1,33 +1,62 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  CreateDateColumn, UpdateDateColumn, DeleteDateColumn,
+  Unique, Index
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity('organizations')
+@Unique(['slug'])
+@Unique(['subdomain'])
 export class Organization {
-  @PrimaryGeneratedColumn()
-  @ApiProperty()
-  id: number;
+  @ApiProperty({ format: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({ unique: true })
   @ApiProperty()
+  @Index()
+  @Column({ length: 120 })
   name: string;
 
-  @Column({ nullable: true })
+  @ApiProperty({ description: 'URL-safe name; generated from name' })
+  @Index()
+  @Column({ length: 140 })
+  slug: string;
+
+  @ApiProperty({ required: false, description: 'e.g. acme => acme.yourapp.com' })
+  @Index()
+  @Column({ length: 63, nullable: true })
+  subdomain?: string;
+
   @ApiProperty({ required: false })
-  address?: string;
-
   @Column({ nullable: true })
-  @ApiProperty({ required: false })
-  contactEmail?: string;
+  legalName?: string;
 
+  @ApiProperty({ required: false })
   @Column({ nullable: true })
+  billingEmail?: string;
+
   @ApiProperty({ required: false })
-  contactPhone?: string;
+  @Column({ nullable: true })
+  logoUrl?: string;
 
-  @CreateDateColumn()
-  @ApiProperty()
-  createdAt: Date;
+  @ApiProperty({ default: true })
+  @Index()
+  @Column({ default: true })
+  isActive: boolean;
 
-  @UpdateDateColumn()
-  @ApiProperty()
-  updatedAt: Date;
+  @ApiProperty({ required: false })
+  @Column({ default: 'UTC' })
+  timezone: string;
+
+  @ApiProperty({ required: false })
+  @Column({ default: 'en' })
+  locale: string;
+
+  @Column('uuid', { nullable: true })
+  createdByUserId?: string;
+
+  @CreateDateColumn() createdAt: Date;
+  @UpdateDateColumn() updatedAt: Date;
+  @DeleteDateColumn() deletedAt?: Date;
 }

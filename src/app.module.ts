@@ -8,6 +8,8 @@ import { SuperAdminModule } from './modules/super-admin/super-admin.module';
 import { UsersModule } from './modules/users/users.module';
 // import { PreciseModule } from './modules/users/precise/precise.module';
 
+import { MembershipsModule } from './modules/memberships/memberships.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -26,6 +28,7 @@ import { UsersModule } from './modules/users/users.module';
     DashboardModule,
     OrganizationsModule,
     SuperAdminModule,
+    MembershipsModule,
 
     // PreciseModule,
   ],

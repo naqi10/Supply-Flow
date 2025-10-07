@@ -4,6 +4,7 @@ import { OrganizationsService } from '../organizations/organizations.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { UserRole } from '../users/entities/user.entity';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
+import { OrgListQueryDto } from '../organizations/dto/org-list-query.dto';
 
 @Injectable()
 export class SuperAdminService {
@@ -14,11 +15,11 @@ export class SuperAdminService {
   ) {}
 
   // Organization Management
-  getAllOrganizations() {
-    return this.orgService.findAll();
+  getAllOrganizations(query?: OrgListQueryDto) {
+    return this.orgService.findAll(query); // query is optional now
   }
 
-  deleteOrganization(id: number) {
+  deleteOrganization(id: string) {         // <-- UUID string
     return this.orgService.remove(id);
   }
 
@@ -27,6 +28,8 @@ export class SuperAdminService {
     return this.usersService.findAll();
   }
 
+  // keep number here only if your users table still uses numeric IDs.
+  // if you've migrated users to UUIDs, change 'number' to 'string'
   updateUserRole(id: number, role: UserRole) {
     const dto: UpdateUserDto = { role } as UpdateUserDto;
     return this.usersService.update(id, dto);

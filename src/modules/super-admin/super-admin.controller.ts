@@ -5,6 +5,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
+import { ParseUUIDPipe } from '@nestjs/common';
+
 
 @ApiTags('super-admin')
 @ApiBearerAuth()
@@ -21,7 +23,7 @@ export class SuperAdminController {
   }
 
   @Delete('organizations/:id')
-  deleteOrg(@Param('id') id: number) {
+  removeOrg(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.svc.deleteOrganization(id);
   }
 
